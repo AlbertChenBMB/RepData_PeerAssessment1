@@ -78,3 +78,12 @@ for(i in 1:nrow(new)){
 new$weekday<-as.factor(new$weekday)
 #calculate average steps by interval across all days
 df_by_interval<-aggregate(steps ~ interval + weekday,new,sum)
+qplot(interval, 
+      steps, 
+      data = df_by_interval, 
+      type = 'l', 
+      geom=c("line"),
+      xlab = "Interval", 
+      ylab = "Number of steps", 
+      main = "") +
+        facet_wrap(~ weekday, ncol = 1)
