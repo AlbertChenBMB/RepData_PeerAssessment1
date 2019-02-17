@@ -1,21 +1,58 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: 
+output:
   html_document:
     keep_md: true
 ---
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Loading and preprocessing the data
 
-
+ Firstly, we read data and check it.
+```{r}
+dataset<-read.csv("activity.csv")
+```
 
 ## What is mean total number of steps taken per day?
 
+For this questioin, we group the data by day and store it as d_data, then plot the histogram of the total number of steps taken each day.  
 
+We applied dplyr package to help us.
+```{r}
+library(dplyr)
+d_data <- group_by(dataset,date)
+for_plot<-summarise(d_data,total=sum(steps))
+hist(for_plot$total,main = "Histogram of steps taken each day",xlab = "sum of steps")
+```
+and we calculate the mean and median. 
+The mean of steps taken each day is as follow table. 
+```{r}
+library(dplyr)
+d_data%>% summarise(mean(steps,na.rm = TRUE))
+```
+The median of steps taken each day is as follow table. 
+```{r}
+library(dplyr)
+d_data%>% summarise(median(steps,na.rm = TRUE))
+```
 
 ## What is the average daily activity pattern?
 
+We plot the 5-minumte interval and the average number of steps taken, averaged across all days.
+```{r}
+time_interval<- aggregate(steps ~interval,d_data,mean)
+plot(time_interval$steps,type = "l",main = "Time interval",
+     xlab = "5-minute interval",
+     ylab = "Averaged Steps")
+```
+We also interested about the maximum number of steps across all the days in the dataset. 
+```{r}
+x<-time_interval[which.max(time_interval$steps),]$steps
+
+```
+The maximum number od steps is `x`.
 
 
 ## Imputing missing values
